@@ -33,5 +33,5 @@ int main() {
 		printf("Exiting Parent process now ...\n");
 	}
 
-
+	return 0;
 }

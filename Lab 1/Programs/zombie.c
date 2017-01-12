@@ -4,6 +4,10 @@
 
 int main() {
 
+	int arr[100];
+	for(int i = 0; i < 6; i ++)
+		scanf("%d",&n);
+
 	pid_t pid = fork();
 
 	if(pid == 0) {
