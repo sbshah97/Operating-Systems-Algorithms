@@ -30,6 +30,7 @@ main() {
 					printf("Buffer is Empty\n");
 				break;
 			case 3:
+				printf("Exiting the program\n");
 				exit(0);
 				break;
 		}

@@ -32,7 +32,7 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 
-	sprintf(shm, "hello world\n");
+	sprintf(shm, "Hello World\n");
 	printf("Shared memory content: %s\n",shm);
 	sleep(1000);
 
