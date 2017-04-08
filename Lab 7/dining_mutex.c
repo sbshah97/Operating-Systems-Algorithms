@@ -1,42 +1,38 @@
-# include<stdio.h>
-# include<pthread.h>
-# include<stdlib.h>
-# include<unistd.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <stdlib.h>
+# include <unistd.h>
 
-# include<ctype.h>
-# include<sys/types.h>
-# include<sys/wait.h>
-# include<semaphore.h>
+# include <ctype.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <semaphore.h>
 
 # define philosopher 5
 
 pthread_mutex_t chopstick[philosopher];
 
-void *thread_func(int n)
-
-	{
+void *thread_func(int n) {
 
 	int i,iteration=5;
 
-	for(i=0;i<iteration;++i)
+	for(i=0;i<iteration;++i) {
 
-	{
+		sleep(1);
 
-	sleep(1);
+		pthread_mutex_lock(&chopstick[n]);
 
-	pthread_mutex_lock(&chopstick[n]);
+		pthread_mutex_lock(&chopstick[(n+1)%philosopher]);
 
-	pthread_mutex_lock(&chopstick[(n+1)%philosopher]);
+		printf("\nBegin eating :%d",n);
 
-	printf("\nBegin eating :%d",n);
+		sleep(1);
 
-	sleep(1);
+		printf("\nFinish eating:%d",n);
 
-	printf("\nFinish eating:%d",n);
+		pthread_mutex_unlock(&chopstick[n]);
 
-	pthread_mutex_unlock(&chopstick[n]);
-
-	pthread_mutex_unlock(&chopstick[(n+1)%philosopher]);
+		pthread_mutex_unlock(&chopstick[(n+1)%philosopher]);
 
 	}
 
@@ -44,9 +40,7 @@ void *thread_func(int n)
 
 }
 
-int main()
-
-	{
+int main() {
 
 	int i,res;
 
@@ -54,77 +48,61 @@ int main()
 
 	void *thread_func(int n);
 
-	for(i=0;i<philosopher;++i)
+	for(i=0;i<philosopher;++i) {
 
-	{
+		res=pthread_mutex_init(&chopstick[i],NULL);
 
-	res=pthread_mutex_init(&chopstick[i],NULL);
+		if(res==-1) {
 
-	if(res==-1)
+			perror("mutex initialization failed");
 
-	{
+			exit(1);
 
-	perror("mutex initialization failed");
-
-	exit(1);
+		}
 
 	}
 
-	}
+	for(i=0;i<philosopher;++i) {
 
-	for(i=0;i<philosopher;++i)
+		res=pthread_create(&a_thread[i],NULL,thread_func,(int)i);
 
-	{
+		if(res!=0) {
 
-	res=pthread_create(&a_thread[i],NULL,thread_func,(int)i);
+			perror("mutex creation failed");
 
-	if(res!=0)
+			exit(1);
 
-	{
-
-	perror("mutex creation failed");
-
-	exit(1);
+		}
 
 	}
 
-	}
+	for(i=0;i<philosopher;++i) {
 
-	for(i=0;i<philosopher;++i)
+		res=pthread_join(a_thread[i],NULL);
 
-	{
+		if(res!=0) {
 
-	res=pthread_join(a_thread[i],NULL);
+			perror("mutex join failed");
 
-	if(res!=0)
+			exit(1);
 
-	{
-
-	perror("mutex join failed");
-
-	exit(1);
-
-	}
+		}
 
 	}
 
 	printf("thread join successful\n");
 
-	for(i=0;i<philosopher;++i)
+	for(i=0;i<philosopher;++i) {
 
-	{
+		res=pthread_mutex_destroy(&chopstick[i]);
 
-	res=pthread_mutex_destroy(&chopstick[i]);
+		if(res==-1) {
 
-	if(res==-1)
+			perror("mutex destruction failed");
 
-	{
+			exit(1);
 
-	perror("mutex destruction failed");
-
-	exit(1);
-
-	}
+		}
 
 	}
 
